@@ -1,0 +1,19 @@
+ { "missionaries":
+  [ { "id": "1", "name": "Ana e Pedro Silva", "field": 
+  "Saúde e assistência médica", "country": 
+  "Moçambique", "bio":
+   "Oferecendo cuidados médicos e levando esperança a comunidades carentes.", 
+"imageUrl": "https://images.pexels.com/photos/6519864/pexels-photo-6519864.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" },
+{ "id": "2", "name": "Maria e João Santos", "field": "Educação e plantação de igrejas", 
+"country": "Camboja", "bio": 
+    "Trabalhando com crianças e estabelecendo igrejas em comunidades rurais.", 
+ "imageUrl": "https://images.pexels.com/photos/6646917/pexels-photo-6646917.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" },
+
+{ "id": "3", "name": 
+ "Isabela Martins", "field": "Tradução da Bíblia", "country": "Indonésia", 
+ "bio": "Traduzindo as Escrituras para línguas locais para alcançar grupos de pessoas não alcançadas.", 
+ "imageUrl": "https://images.pexels.com/photos/5905498/pexels-photo-5905498.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" } ],
+"verses": [ { "id": "1", "reference": "Filipenses 4:13", "text": "Tudo posso naquele que me fortalece." }, 
+{ "id": "2", "reference": "Josué 1:9", "text": "Seja forte e corajoso! Não se apavore nem desanime, pois o Senhor, o seu Deus, estará com você por onde você andar." }, 
+{ "id": "3", "reference": "Romanos 8:28", "text": "Sabemos que Deus age em todas as coisas para o bem daqueles que o amam, dos que foram chamados de acordo com o seu propósito." } ], 
+"letters": [] }
