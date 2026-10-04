@@ -1,122 +1,62 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
+import { lazy, Suspense } from 'react';
+import styles from './App.module.css';
+import { Heart, Send } from 'lucide-react';
+// Os skeletons NÃO usam lazy: são o fallback, então precisam estar disponíveis
+// imediatamente, antes de qualquer pedaço assíncrono terminar de baixar.
+import MissionaryListSkeleton from './components/MissionaryListSkeleton';
+import LetterListSkeleton from './components/LetterListSkeleton';
+
+// Lazy Loading: em vez de importar as listas no início, elas viram "pedaços"
+// separados do bundle. O navegador só baixa o código de cada lista quando
+// ela é renderizada. Isso reduz o bundle inicial e acelera a primeira tela.
+// Requisito: o componente precisa ter "export default" (as listas têm).
+const MissionaryList = lazy(() => import('./components/MissionaryList'));
+const LetterList = lazy(() => import('./components/LetterList'));
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
+    <div className={styles.container}>
+      <header className={styles.header}>
+        <div className={styles.logo}>
+          <Heart className={styles.logoIcon} />
+          <span>Faith Letters</span>
         </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
+        <button className={styles.sendButton}>
+          <Send size={16} />
+          Enviar carta
+        </button>
+      </header>
+
+      <main className={styles.main}>
+        <section className={styles.missionariesSection}>
+          <h2 className={styles.sectionTitle}>Missionários</h2>
+          {/* Suspense exibe o Skeleton enquanto o código da lista é baixado,
+              evitando a "tela branca" e melhorando a percepção de velocidade. */}
+          <Suspense fallback={<MissionaryListSkeleton />}>
+            <MissionaryList />
+          </Suspense>
+        </section>
+
+        <section className={styles.missionariesSection}>
+          <h2 className={styles.sectionTitle}>Cartas</h2>
+          <Suspense fallback={<LetterListSkeleton />}>
+            <LetterList />
+          </Suspense>
+        </section>
+      </main>
+
+      <footer className={styles.footer}>
+        <div className={styles.footerContent}>
+          <h3 className={styles.footerTitle}>
+            Envie uma palavra de encorajamento
+          </h3>
+          <p className={styles.footerDescription}>
+            Feito com <Heart className={styles.heartIcon} /> para quem serve
           </p>
         </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
-
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+      </footer>
+    </div>
+  );
 }
 
-export default App
+export default App;

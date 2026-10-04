@@ -1,0 +1,69 @@
+/* Mesmo grid da lista real, para o layout não "pular" quando o conteúdo chegar */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 2rem;
+  justify-items: center;
+}
+
+.card {
+  width: 100%;
+  max-width: 380px;
+  background: white;
+  border: 1px solid var(--color-border-primary);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.image {
+  height: 220px;
+}
+
+.content {
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.line {
+  height: 14px;
+  border-radius: 6px;
+}
+
+.title {
+  height: 22px;
+  width: 60%;
+}
+
+.short {
+  width: 40%;
+}
+
+/* Efeito de brilho que passa pelo bloco cinza */
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--color-surface-muted) 25%,
+    #e5e7eb 50%,
+    var(--color-surface-muted) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite linear;
+}
+
+@keyframes shimmer {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
