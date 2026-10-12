@@ -1,74 +1,46 @@
-import { lazy, Suspense, useState } from 'react';
-import styles from './App.module.css';
-import { Heart, Send } from 'lucide-react';
-import { CreateLetterModal } from './components/CreateLetterModal/CreateLetterModal';
-// Os skeletons NÃO usam lazy: são o fallback, então precisam estar disponíveis
-// imediatamente, antes de qualquer pedaço assíncrono terminar de baixar.
-import MissionaryListSkeleton from './components/MissionaryListSkeleton';
-import LetterListSkeleton from './components/LetterListSkeleton';
-
-// Lazy Loading: em vez de importar as listas no início, elas viram "pedaços"
-// separados do bundle. O navegador só baixa o código de cada lista quando
-// ela é renderizada. Isso reduz o bundle inicial e acelera a primeira tela.
-// Requisito: o componente precisa ter "export default" (as listas têm).
-const MissionaryList = lazy(() => import('./components/MissionaryList'));
-const LetterList = lazy(() => import('./components/LetterList'));
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { SignedIn, SignedOut, RedirectToSignIn } from '@clerk/clerk-react';
+import HomePage from './pages/home';
+import OpenPage from './pages/open';
 
 function App() {
-  // Estado que controla se o modal está aberto (fica aqui, no componente "pai")
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
   return (
-    <div className={styles.container}>
-      <header className={styles.header}>
-        <div className={styles.logo}>
-          <Heart className={styles.logoIcon} />
-          <span>Faith Letters</span>
-        </div>
-        <button
-          className={styles.sendButton}
-          onClick={() => setIsModalOpen(true)}
-        >
-          <Send size={16} />
-          Enviar carta
-        </button>
-      </header>
+    <Router>
+      <Routes>
+        {/* Rota protegida: só entra quem está logado */}
+        <Route
+          path="/"
+          element={
+            <>
+              <SignedIn>
+                <HomePage />
+              </SignedIn>
+              <SignedOut>
+                <RedirectToSignIn />
+              </SignedOut>
+            </>
+          }
+        />
 
-      <main className={styles.main}>
-        <section className={styles.missionariesSection}>
-          <h2 className={styles.sectionTitle}>Missionários</h2>
-          {/* Suspense exibe o Skeleton enquanto o código da lista é baixado,
-              evitando a "tela branca" e melhorando a percepção de velocidade. */}
-          <Suspense fallback={<MissionaryListSkeleton />}>
-            <MissionaryList />
-          </Suspense>
-        </section>
+        {/* Rota pública */}
+        <Route path="/open" element={<OpenPage />} />
 
-        <section className={styles.missionariesSection}>
-          <h2 className={styles.sectionTitle}>Cartas</h2>
-          <Suspense fallback={<LetterListSkeleton />}>
-            <LetterList />
-          </Suspense>
-        </section>
-      </main>
-
-      <footer className={styles.footer}>
-        <div className={styles.footerContent}>
-          <h3 className={styles.footerTitle}>
-            Envie uma palavra de encorajamento
-          </h3>
-          <p className={styles.footerDescription}>
-            Feito com <Heart className={styles.heartIcon} /> para quem serve
-          </p>
-        </div>
-      </footer>
-
-      {/* Modal (Smart Component): recebe o estado e a função de fechar */}
-      <CreateLetterModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-      />
-    </div>
+        {/* Qualquer outra rota */}
+        <Route
+          path="*"
+          element={
+            <>
+              <SignedIn>
+                <Navigate to="/" replace />
+              </SignedIn>
+              <SignedOut>
+                <RedirectToSignIn />
+              </SignedOut>
+            </>
+          }
+        />
+      </Routes>
+    </Router>
   );
 }
 
