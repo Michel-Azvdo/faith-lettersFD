@@ -1,6 +1,7 @@
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useState } from 'react';
 import styles from './App.module.css';
 import { Heart, Send } from 'lucide-react';
+import { CreateLetterModal } from './components/CreateLetterModal/CreateLetterModal';
 // Os skeletons NÃO usam lazy: são o fallback, então precisam estar disponíveis
 // imediatamente, antes de qualquer pedaço assíncrono terminar de baixar.
 import MissionaryListSkeleton from './components/MissionaryListSkeleton';
@@ -14,6 +15,9 @@ const MissionaryList = lazy(() => import('./components/MissionaryList'));
 const LetterList = lazy(() => import('./components/LetterList'));
 
 function App() {
+  // Estado que controla se o modal está aberto (fica aqui, no componente "pai")
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   return (
     <div className={styles.container}>
       <header className={styles.header}>
@@ -21,7 +25,10 @@ function App() {
           <Heart className={styles.logoIcon} />
           <span>Faith Letters</span>
         </div>
-        <button className={styles.sendButton}>
+        <button
+          className={styles.sendButton}
+          onClick={() => setIsModalOpen(true)}
+        >
           <Send size={16} />
           Enviar carta
         </button>
@@ -55,6 +62,12 @@ function App() {
           </p>
         </div>
       </footer>
+
+      {/* Modal (Smart Component): recebe o estado e a função de fechar */}
+      <CreateLetterModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
     </div>
   );
 }
